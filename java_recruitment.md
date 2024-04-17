@@ -86,6 +86,8 @@ TBD
 
 
 # <a name="_bnafu5f4hxl0"></a>3. Code the solution from scratch:
+This part of the test is about learning something new and applying the knowledge.  HADOOP is not part of the job, only just used for the interview.
+
 
 Please, provide us with the code solution for the steps listed below:
 
