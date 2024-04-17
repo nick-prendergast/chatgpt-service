@@ -9,8 +9,8 @@ Creativity and extra scenarios will greatly improve the evaluation
 
 ## General aptitude test
 
-1. Can you tell me what annoys you in Java SpringBoot the most? What features would you like to know in Java SpringBoot?
-1. How would you go about creating a Java service on the cloud? Specify steps and why.
+1. Can you tell me what annoys you in Java SpringBoot the most? What features would you like to have in Java SpringBoot that you don't have now?
+1. How would you go about creating a Java service on the cloud? Specify steps and explain why.
 1. Do you know any other ways of configuring Java SprintBoot apps but the application context file? Why would you use them? What are the benefits?
 1. Did you work with any enterprise solutions and if yes - tell me more about this experience?
 1. Have you integrated with any BigData solution in Java?
