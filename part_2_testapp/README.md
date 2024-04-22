@@ -38,6 +38,14 @@ Project must be built with `maven` and work with Java version 16+
 You must be able to explain the code and the changes made. You must be able to 
 find bugs in the code and fix them and explain what was not working and why.
 
+__Summary of the requirements__:
+- applicaiton must compile with maven
+- application must run
+- 2 APIs need to work via Postman
+- JWT token must be enabled with simple authentication
+- application must work with Java 16+
+- JSP page must allow entering simple prompt, nothing fancy
+
 ### Submission rules
 
 
