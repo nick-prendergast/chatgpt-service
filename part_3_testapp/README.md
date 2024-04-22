@@ -1,4 +1,4 @@
-# Kolomolo Java test - Part 3
+# Kolomolo Java Test - Part 3
 
 ## Micro Data Warehouse with Docker, Spring boot, Spark and Hadoop
 
