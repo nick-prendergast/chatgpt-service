@@ -1,4 +1,4 @@
-# Kolomolo Java test
+# Kolomolo Java Test - Part 1
 
 ## General aptitude test
 
