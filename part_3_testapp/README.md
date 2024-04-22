@@ -15,6 +15,7 @@ __Summary of the requirements__:
 - docker images for Hadoop and Spark must run
 - you must be able to upload dataset file to Hadoop
 - Spark application must run on spark to process dataset
+- Applicaiton will generate 10 top quisine types from the dataset
 - you must be able to retrieve results from the processed dataset via java springboot
 - (optional) you should be able to display the processed data (JSP)
 
