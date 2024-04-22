@@ -15,7 +15,7 @@ For this purpose you will create a docker compose that runs SPARK and HADOOP toy
 
 You must be able to somehow upload the provided [dataset file](https://github.com/alexkolomolo/javatest/blob/main/data/foodhub_order.csv) to Hadoop remote filesystem. Also, use whatever means necessary and be able to explain why you chosen this way and how. 
 
-You should be able to build a small __Spark__ application to generate a result from the dataset: ==10 Top cuisine types along with the number of restaurants serving them==. 
+You should be able to build a small __Spark__ application to generate a result from the dataset: __10 Top cuisine types along with the number of restaurants serving them__.
 
 You should be able to build java springboot application to execute this __spark application__ and get the result in your springboot application. As a bonus you may display the results using simple JSP or any other method you deem suitable.
 
