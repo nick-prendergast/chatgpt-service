@@ -16,8 +16,8 @@ ChatGPT Microservice is a small Java springboot app that integrates with the
 OpenAI CHatGPT and OpenAI Whisper to perform prompts and transcriptions.
 
 Application exposes a set of APIs:
-- [](localhost:8500/api/v1/chat)
-- [](localhost:8500/api/v1/transcription)
+- [localhost:8500/api/v1/chat](localhost:8500/api/v1/chat)
+- [localhost:8500/api/v1/transcription](localhost:8500/api/v1/transcription)
 
 Application worked with some of the older API and java version, but a developer
 who was building it left and the code is unfinished and doesn't work
