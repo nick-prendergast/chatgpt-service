@@ -27,6 +27,9 @@ who was building it left and the code is unfinished and doesn't work
 You are tasked to make the project work. The API provided above
 must be accessible via postman and must allow integration with ChatGPT and Whisper services.
 
+Additionally you must be able to provide security to the application in a form
+of a simple JWT
+
 In addition you should be able to create a simple JSP page and deploy in the local
 Tomcat container to allow simple input of a prompt to ChatGPT.
 
