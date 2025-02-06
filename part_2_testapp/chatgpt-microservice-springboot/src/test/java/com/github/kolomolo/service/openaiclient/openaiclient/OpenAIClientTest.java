@@ -30,14 +30,16 @@ class OpenAIClientTest {
         ChatGPTRequest request = new ChatGPTRequest("gpt-3.5-turbo",
                 List.of(new Message("user", "Test message")));
 
-        Choice choice = new Choice();
-        choice.setIndex(0);
-        choice.setMessage(new Message("assistant", "Test response"));
-        choice.setFinishReason("stop");
+        Choice choice = new Choice(0, new Message("assistant", "Test response"), "stop");
 
-        ChatGPTResponse expectedResponse = new ChatGPTResponse();
-        expectedResponse.setChoices(List.of(choice));
-
+        ChatGPTResponse expectedResponse = new ChatGPTResponse(
+                null,
+                null,
+                null,
+                null,
+                List.of(choice),
+                null
+        );
         when(openAIClient.chat(request)).thenReturn(expectedResponse);
         ChatGPTResponse response = openAIClient.chat(request);
 
@@ -54,12 +56,10 @@ class OpenAIClientTest {
                 "test".getBytes()
         );
 
-        WhisperTranscriptionRequest request = new WhisperTranscriptionRequest();
-        request.setModel("whisper-1");
-        request.setFile(file);
+        WhisperTranscriptionRequest request = new WhisperTranscriptionRequest("whisper-1", file);
 
-        WhisperTranscriptionResponse expectedResponse = new WhisperTranscriptionResponse();
-        expectedResponse.setText("Test transcription");
+
+        WhisperTranscriptionResponse expectedResponse = new WhisperTranscriptionResponse("Test transcription");
 
         when(openAIClient.createTranscription(request)).thenReturn(expectedResponse);
         WhisperTranscriptionResponse response = openAIClient.createTranscription(request);

@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JwtServiceTest {
 
-    private JwtService jwtService;
     private static final String SECRET_KEY = "testsecretkeytestsecretkeytestsecretkeytestsecretkey";
     private static final String TEST_USERNAME = "testuser";
+    private JwtService jwtService;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,7 @@ class JwtServiceTest {
 
         // Then
         assertNotNull(token);
-        assertTrue(!token.isEmpty());
+        assertFalse(token.isEmpty());
 
         String username = jwtService.validateTokenAndGetUsername(token);
         assertEquals(TEST_USERNAME, username);
@@ -75,7 +75,7 @@ class JwtServiceTest {
     void validateTokenAndGetUsername_WithModifiedToken_ShouldThrowException() {
         // Given
         String token = jwtService.generateToken(TEST_USERNAME);
-        String modifiedToken = token.substring(0, token.length() - 1) + "X";
+        String modifiedToken = token + "invalidpart";
 
         // When & Then
         assertThrows(RuntimeException.class,

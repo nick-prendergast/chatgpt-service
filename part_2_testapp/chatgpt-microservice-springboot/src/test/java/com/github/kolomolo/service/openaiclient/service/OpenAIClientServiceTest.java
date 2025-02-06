@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,19 +25,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class OpenAIClientServiceTest {
 
-    @Mock
-    private OpenAIClient openAIClient;
-
-    @Mock
-    private OpenAIClientConfig openAIClientConfig;
-
-    @InjectMocks
-    private OpenAIClientService openAIClientService;
-
     private static final String TEST_MODEL = "gpt-3.5-turbo";
     private static final String TEST_AUDIO_MODEL = "whisper-1";
     private static final String TEST_QUESTION = "Hello, how are you?";
     private static final String TEST_RESPONSE = "I'm doing well, thank you!";
+    @Mock
+    private OpenAIClient openAIClient;
+    @Mock
+    private OpenAIClientConfig openAIClientConfig;
+    @InjectMocks
+    private OpenAIClientService openAIClientService;
 
     @Test
     void chat_WithSuccessfulResponse_ShouldReturnContent() {
@@ -96,11 +92,9 @@ class OpenAIClientServiceTest {
         // Given
         when(openAIClientConfig.getAudioModel()).thenReturn(TEST_AUDIO_MODEL);
         MultipartFile mockFile = new MockMultipartFile("test.mp3", "test content".getBytes());
-        TranscriptionRequest transcriptionRequest = new TranscriptionRequest();
-        transcriptionRequest.setFile(mockFile);
+        TranscriptionRequest transcriptionRequest = new TranscriptionRequest(mockFile);
 
-        WhisperTranscriptionResponse mockResponse = new WhisperTranscriptionResponse();
-        mockResponse.setText("Transcribed text");
+        WhisperTranscriptionResponse mockResponse = new WhisperTranscriptionResponse("Transcribed text");
 
         when(openAIClient.createTranscription(any(WhisperTranscriptionRequest.class))).thenReturn(mockResponse);
 
@@ -108,7 +102,7 @@ class OpenAIClientServiceTest {
         WhisperTranscriptionResponse result = openAIClientService.createTranscription(transcriptionRequest);
 
         // Then
-        assertEquals("Transcribed text", result.getText());
+        assertEquals("Transcribed text", result.text());
         verify(openAIClient).createTranscription(any(WhisperTranscriptionRequest.class));
     }
 
@@ -117,8 +111,7 @@ class OpenAIClientServiceTest {
         // Given
         when(openAIClientConfig.getAudioModel()).thenReturn(TEST_AUDIO_MODEL);
         MultipartFile mockFile = new MockMultipartFile("test.mp3", "test content".getBytes());
-        TranscriptionRequest transcriptionRequest = new TranscriptionRequest();
-        transcriptionRequest.setFile(mockFile);
+        TranscriptionRequest transcriptionRequest = new TranscriptionRequest(mockFile);
 
         String errorMessage = "Transcription failed";
         when(openAIClient.createTranscription(any(WhisperTranscriptionRequest.class)))
@@ -128,18 +121,20 @@ class OpenAIClientServiceTest {
         WhisperTranscriptionResponse result = openAIClientService.createTranscription(transcriptionRequest);
 
         // Then
-        assertTrue(result.getText().contains(errorMessage));
+        assertTrue(result.text().contains(errorMessage));
         verify(openAIClient).createTranscription(any(WhisperTranscriptionRequest.class));
     }
 
     private ChatGPTResponse createMockChatGPTResponse() {
-        ChatGPTResponse response = new ChatGPTResponse();
-        List<Choice> choices = new ArrayList<>();
-        Choice choice = new Choice();
         Message message = new Message("assistant", OpenAIClientServiceTest.TEST_RESPONSE);
-        choice.setMessage(message);
-        choices.add(choice);
-        response.setChoices(choices);
-        return response;
+        Choice choice = new Choice(0, message, null);
+        return new ChatGPTResponse(
+                null,    // id
+                null,    // object
+                null,    // model
+                null,
+                List.of(choice),
+                null
+        );
     }
 }

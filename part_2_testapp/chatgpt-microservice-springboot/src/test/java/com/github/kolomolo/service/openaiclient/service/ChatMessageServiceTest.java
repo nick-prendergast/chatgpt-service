@@ -10,7 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -38,10 +39,10 @@ class ChatMessageServiceTest {
         chatMessageService.processMessage(prompt, history);
 
         assertEquals(2, history.size());
-        assertEquals("user", history.get(0).getRole());
-        assertEquals(prompt, history.get(0).getContent());
-        assertEquals("assistant", history.get(1).getRole());
-        assertEquals(response, history.get(1).getContent());
+        assertEquals("user", history.get(0).role());
+        assertEquals(prompt, history.get(0).content());
+        assertEquals("assistant", history.get(1).role());
+        assertEquals(response, history.get(1).content());
     }
 
     @Test
@@ -52,9 +53,9 @@ class ChatMessageServiceTest {
         chatMessageService.processMessage(prompt, history);
 
         assertEquals(2, history.size());
-        assertEquals("user", history.get(0).getRole());
-        assertEquals(prompt, history.get(0).getContent());
-        assertEquals("assistant", history.get(1).getRole());
-        assertTrue(history.get(1).getContent().contains("Error"));
+        assertEquals("user", history.get(0).role());
+        assertEquals(prompt, history.get(0).content());
+        assertEquals("assistant", history.get(1).role());
+        assertTrue(history.get(1).content().contains("Error"));
     }
 }

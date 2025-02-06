@@ -109,6 +109,7 @@ class AuthControllerTest {
                 .andExpect(content().string(containsString("Unrecognized field \"unknown\"")))
                 .andExpect(content().string(containsString("not marked as ignorable")));
     }
+
     @Test
     void login_WhenUnauthorized_ShouldReturnUnauthorized() throws Exception {
         AuthenticationRequest request = new AuthenticationRequest("testUser", "testPassword");

@@ -3,6 +3,7 @@ package com.github.kolomolo.service.openaiclient.exception;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import jakarta.validation.Path;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -75,9 +76,6 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleMediaTypeNotSupported_ShouldReturnUnsupportedMediaTypeResponse() {
-        // Given
-        HttpMediaTypeNotSupportedException ex = new HttpMediaTypeNotSupportedException("Unsupported media type");
-
         // When
         ResponseEntity<String> response = exceptionHandler.handleMediaTypeNotSupported();
 
@@ -116,12 +114,6 @@ class GlobalExceptionHandlerTest {
         assertEquals("Unknown field: 'unknownField'. Expected fields: testField", response.getBody());
     }
 
-    // Helper class for testing unknown fields
-    private static class TestClassForUnknownFieldsTest {
-        private String testField;
-    }
-
-
     @Test
     void handleConstraintViolationException_ShouldReturnBadRequestWithViolationDetails() {
         // Given
@@ -140,6 +132,11 @@ class GlobalExceptionHandlerTest {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("fieldName: Constraint violation message", response.getBody());
+    }
+
+    // Helper class for testing unknown fields
+    private static class TestClassForUnknownFieldsTest {
+        private String testField;
     }
 
 }

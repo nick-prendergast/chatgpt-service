@@ -18,15 +18,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
 
-    @Mock
-    private JwtService jwtService;
-
-    @InjectMocks
-    private AuthenticationService authenticationService;
-
     private static final String VALID_USERNAME = "testuser";
     private static final String VALID_PASSWORD = "testpass";
     private static final String TEST_TOKEN = "test.jwt.token";
+    @Mock
+    private JwtService jwtService;
+    @InjectMocks
+    private AuthenticationService authenticationService;
 
     @BeforeEach
     void setUp() {

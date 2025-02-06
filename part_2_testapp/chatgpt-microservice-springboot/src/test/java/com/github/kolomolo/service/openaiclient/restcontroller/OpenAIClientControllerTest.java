@@ -37,20 +37,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 class OpenAIClientControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private OpenAIClientService openAIClientService;
-
-    @MockBean
-    private JwtService jwtService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private static final String MOCK_TOKEN = "Bearer mock.jwt.token";
     private static final String VALID_TOKEN = "mock.jwt.token";
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private OpenAIClientService openAIClientService;
+    @MockBean
+    private JwtService jwtService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
@@ -164,8 +160,7 @@ class OpenAIClientControllerTest {
                 "test audio content".getBytes()
         );
 
-        WhisperTranscriptionResponse expectedResponse = new WhisperTranscriptionResponse();
-        expectedResponse.setText("Test transcription");
+        WhisperTranscriptionResponse expectedResponse = new WhisperTranscriptionResponse("Test transcription");
 
         when(openAIClientService.createTranscription(any(TranscriptionRequest.class)))
                 .thenReturn(expectedResponse);

@@ -21,12 +21,12 @@ public class OpenAIClientService {
 
     public String chat(ChatRequest chatRequest) {
         try {
-            Message message = new Message("user", chatRequest.getQuestion());
+            Message message = new Message("user", chatRequest.question());
 
-            ChatGPTRequest chatGPTRequest = new ChatGPTRequest(openAIClientConfig.getModel(),Collections.singletonList(message));
+            ChatGPTRequest chatGPTRequest = new ChatGPTRequest(openAIClientConfig.getModel(), Collections.singletonList(message));
 
             ChatGPTResponse response = openAIClient.chat(chatGPTRequest);
-            return response.getChoices().getFirst().getMessage().getContent();
+            return response.choices().getFirst().message().content();
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             if (errorMessage != null && errorMessage.contains("message")) {
@@ -42,15 +42,11 @@ public class OpenAIClientService {
 
     public WhisperTranscriptionResponse createTranscription(TranscriptionRequest transcriptionRequest) {
         try {
-            WhisperTranscriptionRequest whisperRequest = new WhisperTranscriptionRequest();
-            whisperRequest.setModel(openAIClientConfig.getAudioModel());
-            whisperRequest.setFile(transcriptionRequest.getFile());
+            WhisperTranscriptionRequest whisperRequest = new WhisperTranscriptionRequest(openAIClientConfig.getAudioModel(), transcriptionRequest.file());
 
             return openAIClient.createTranscription(whisperRequest);
         } catch (Exception e) {
-            WhisperTranscriptionResponse response = new WhisperTranscriptionResponse();
-            response.setText("Error: " + e.getMessage());
-            return response;
+            return new WhisperTranscriptionResponse("Error: " + e.getMessage());
         }
     }
 }
