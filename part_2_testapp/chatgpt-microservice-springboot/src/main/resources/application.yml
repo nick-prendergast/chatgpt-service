@@ -3,8 +3,18 @@ server:
   servlet:
     context-path: /
 
+# Spring MVC Configuration for JSP
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  jackson:
+    default-property-inclusion: NON_NULL
+
+# OpenAI Service Configuration
 openai-service:
-  api-key: <api key>
+  api-key: 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
   gpt-model: gpt-3.5-turbo
   audio-model: whisper-1
   http-client:
@@ -15,15 +25,12 @@ openai-service:
     chat-url: /chat/completions
     create-transcription-url: /audio/transcriptions
 
+# Logging Configuration
 logging:
   level:
     com.github.kolomolo.service.openaiclient: TRACE
 
-# Spring
-spring:
-  jackson:
-    default-property-inclusion: NON_NULL
-
+# Actuator Endpoints
 management:
   endpoints:
     web:
@@ -36,3 +43,8 @@ management:
   health:
     circuitbreakers:
       enabled: true
+
+jwt:
+  secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  username: admin
+  password: admin123

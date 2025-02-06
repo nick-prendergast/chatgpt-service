@@ -1,13 +1,11 @@
 package com.github.kolomolo.service.openaiclient.model.response;
 
 import lombok.Data;
-
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class ChatGPTResponse implements Serializable {
+public class ChatGPTResponse {
     private String id;
     private String object;
     private String model;

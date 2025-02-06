@@ -1,10 +1,14 @@
 package com.github.kolomolo.service.openaiclient.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.io.Serializable;
+import jakarta.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ChatRequest implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChatRequest {
+    @NotBlank(message = "Question cannot be empty")
     private String question;
 }
