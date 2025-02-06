@@ -14,7 +14,7 @@ spring:
 
 # OpenAI Service Configuration
 openai-service:
-  api-key: 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
+  api-key:
   gpt-model: gpt-3.5-turbo
   audio-model: whisper-1
   http-client:
