@@ -23,12 +23,10 @@ public class OpenAIClientService {
         try {
             Message message = new Message("user", chatRequest.getQuestion());
 
-            ChatGPTRequest chatGPTRequest = new ChatGPTRequest();
-            chatGPTRequest.setModel(openAIClientConfig.getModel());
-            chatGPTRequest.setMessages(Collections.singletonList(message));
+            ChatGPTRequest chatGPTRequest = new ChatGPTRequest(openAIClientConfig.getModel(),Collections.singletonList(message));
 
             ChatGPTResponse response = openAIClient.chat(chatGPTRequest);
-            return response.getChoices().get(0).getMessage().getContent();
+            return response.getChoices().getFirst().getMessage().getContent();
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             if (errorMessage != null && errorMessage.contains("message")) {

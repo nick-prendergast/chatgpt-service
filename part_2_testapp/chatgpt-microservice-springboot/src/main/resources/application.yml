@@ -3,16 +3,15 @@ server:
   servlet:
     context-path: /
 
-# Spring MVC Configuration for JSP
 spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
   mvc:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
-  jackson:
-    default-property-inclusion: NON_NULL
 
-# OpenAI Service Configuration
 openai-service:
   api-key: ${OPENAI_API_KEY}
   gpt-model: gpt-3.5-turbo
@@ -25,12 +24,10 @@ openai-service:
     chat-url: /chat/completions
     create-transcription-url: /audio/transcriptions
 
-# Logging Configuration
 logging:
   level:
     com.github.kolomolo.service.openaiclient: TRACE
 
-# Actuator Endpoints
 management:
   endpoints:
     web:
@@ -45,6 +42,6 @@ management:
       enabled: true
 
 jwt:
-  secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-  username: admin
-  password: admin123
+  secret-key: ${JWT_SECRET_KEY:your-secure-256-bit-secret-key-here}
+  username: ${JWT_USERNAME:devuser}
+  password: ${JWT_PASSWORD:devpass123}
