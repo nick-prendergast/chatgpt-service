@@ -1,6 +1,6 @@
 package com.github.kolomolo.service.openaiclient;
 
-import com.github.kolomolo.service.openaiclient.service.OpenAIClientService;
+import com.github.kolomolo.service.openaiclient.service.ChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,11 +24,11 @@ class ChatIntegrationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OpenAIClientService openAIClientService;
+    private ChatService chatService;
 
     @Test
     void fullChatFlow() throws Exception {
-        when(openAIClientService.chat(any())).thenReturn("Test response from ChatGPT");
+        when(chatService.chat(any())).thenReturn("Test response from ChatGPT");
 
         // Initial GET request to start session
         MvcResult initialResult = mockMvc.perform(get("/"))

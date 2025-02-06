@@ -19,14 +19,14 @@ import static org.mockito.Mockito.when;
 class ChatMessageServiceTest {
 
     @Mock
-    private OpenAIClientService openAIClientService;
+    private ChatService chatService;
 
     private ChatMessageService chatMessageService;
     private List<Message> history;
 
     @BeforeEach
     void setUp() {
-        chatMessageService = new ChatMessageService(openAIClientService);
+        chatMessageService = new ChatMessageService(chatService);
         history = new ArrayList<>();
     }
 
@@ -34,7 +34,7 @@ class ChatMessageServiceTest {
     void processMessage_ShouldAddUserAndAssistantMessages() {
         String prompt = "test message";
         String response = "test response";
-        when(openAIClientService.chat(any())).thenReturn(response);
+        when(chatService.chat(any())).thenReturn(response);
 
         chatMessageService.processMessage(prompt, history);
 
@@ -48,7 +48,7 @@ class ChatMessageServiceTest {
     @Test
     void processMessage_WhenErrorOccurs_ShouldAddErrorMessage() {
         String prompt = "test message";
-        when(openAIClientService.chat(any())).thenThrow(new RuntimeException("API Error"));
+        when(chatService.chat(any())).thenThrow(new RuntimeException("API Error"));
 
         chatMessageService.processMessage(prompt, history);
 

@@ -41,7 +41,6 @@ public class GlobalExceptionHandler {
                 .body(message);
     }
 
-
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<String> handleMediaTypeNotSupported() {
         return new ResponseEntity<>(
@@ -71,7 +70,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
-
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
