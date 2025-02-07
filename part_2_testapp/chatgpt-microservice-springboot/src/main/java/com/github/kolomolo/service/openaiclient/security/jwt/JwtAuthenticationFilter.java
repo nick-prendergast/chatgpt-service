@@ -1,5 +1,6 @@
 package com.github.kolomolo.service.openaiclient.security.jwt;
 
+import com.github.kolomolo.service.openaiclient.exception.JwtAuthenticationException;
 import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,12 +43,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            authHandler.authenticateToken(token);
-            log.debug("JWT authentication successful for path: {}", path);
-            filterChain.doFilter(request, response);
+            try {
+                authHandler.authenticateToken(token);
+                log.debug("JWT authentication successful for path: {}", path);
+                filterChain.doFilter(request, response);
+            } catch (JwtAuthenticationException e) {
+                log.warn("JWT authentication failed: {}", e.getMessage());
+                authHandler.handleAuthenticationFailure(response, e.getMessage());
+            }
         } catch (Exception e) {
-            log.error("JWT authentication failed", e);
+            log.error("Unexpected error in JWT authentication", e);
             authHandler.handleUnexpectedError(response, e);
         }
     }
+
 }

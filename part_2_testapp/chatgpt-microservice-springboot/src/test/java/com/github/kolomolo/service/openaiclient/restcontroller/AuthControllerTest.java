@@ -10,7 +10,7 @@ import com.github.kolomolo.service.openaiclient.security.jwt.JwtTokenExtractor;
 import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
 import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationFilter;
-import com.github.kolomolo.service.openaiclient.service.AuthenticationService;
+import com.github.kolomolo.service.openaiclient.service.API.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

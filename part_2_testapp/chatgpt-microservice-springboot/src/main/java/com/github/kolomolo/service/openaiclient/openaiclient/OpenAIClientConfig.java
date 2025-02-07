@@ -41,7 +41,7 @@ public class OpenAIClientConfig {
 
     @Bean
     public Logger.Level feignLogger() {
-        return Logger.Level.FULL;
+        return Logger.Level.BASIC;
     }
 
     @Bean

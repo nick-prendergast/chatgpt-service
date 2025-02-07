@@ -1,6 +1,10 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.GUI;
 
+import com.github.kolomolo.service.openaiclient.exception.ChatException;
+import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
 import com.github.kolomolo.service.openaiclient.model.request.Message;
+import com.github.kolomolo.service.openaiclient.service.ChatService;
+import feign.FeignException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +53,8 @@ class ChatMessageServiceTest {
     @Test
     void processMessage_WhenErrorOccurs_ShouldAddErrorMessage() {
         String prompt = "test message";
-        when(chatService.chat(any())).thenThrow(new RuntimeException("API Error"));
+        when(chatService.chat(any(ChatRequest.class)))
+                .thenThrow(new ChatException("API Error", mock(FeignException.class)));
 
         chatMessageService.processMessage(prompt, history);
 

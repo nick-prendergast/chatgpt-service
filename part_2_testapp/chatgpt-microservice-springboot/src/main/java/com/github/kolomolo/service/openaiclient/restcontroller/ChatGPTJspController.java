@@ -1,7 +1,7 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
-import com.github.kolomolo.service.openaiclient.service.ChatMessageService;
-import com.github.kolomolo.service.openaiclient.service.ChatSessionService;
+import com.github.kolomolo.service.openaiclient.service.GUI.ChatMessageService;
+import com.github.kolomolo.service.openaiclient.service.GUI.ChatSessionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

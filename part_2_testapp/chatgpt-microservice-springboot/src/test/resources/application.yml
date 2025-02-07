@@ -18,6 +18,10 @@ jwt:
   issuer: kolomolo-service
 
 spring:
+  security:
+    user:
+      name: testuser
+      password: testpass
   jackson:
     deserialization:
       fail-on-unknown-properties: true

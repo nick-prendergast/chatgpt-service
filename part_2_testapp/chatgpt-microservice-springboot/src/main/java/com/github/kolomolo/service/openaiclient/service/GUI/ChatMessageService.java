@@ -1,8 +1,10 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.GUI;
 
 import com.github.kolomolo.service.openaiclient.common.ChatConstants;
+import com.github.kolomolo.service.openaiclient.exception.ChatException;
 import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
 import com.github.kolomolo.service.openaiclient.model.request.Message;
+import com.github.kolomolo.service.openaiclient.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,8 @@ public class ChatMessageService {
         try {
             String response = chatService.chat(new ChatRequest(prompt));
             history.add(new Message(ChatConstants.Roles.ASSISTANT, response));
-        } catch (Exception e) {
-            log.error("Error getting chat response", e);
-            history.add(new Message("assistant", "Error: " + e.getMessage()));
+        } catch (ChatException e) {
+            history.add(new Message("assistant", e.getMessage()));
         }
     }
 }

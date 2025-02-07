@@ -1,4 +1,4 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.API;
 
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;

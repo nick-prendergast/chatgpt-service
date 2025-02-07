@@ -9,7 +9,7 @@ import com.github.kolomolo.service.openaiclient.security.jwt.JwtTokenExtractor;
 import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
 import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationFilter;
-import com.github.kolomolo.service.openaiclient.service.TranscriptionService;
+import com.github.kolomolo.service.openaiclient.service.API.TranscriptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

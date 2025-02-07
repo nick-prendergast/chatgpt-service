@@ -1,9 +1,13 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.API;
 
+import com.github.kolomolo.service.openaiclient.exception.TranscriptionException;
 import com.github.kolomolo.service.openaiclient.model.request.TranscriptionRequest;
 import com.github.kolomolo.service.openaiclient.model.response.WhisperTranscriptionResponse;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClient;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClientConfig;
+import com.github.kolomolo.service.openaiclient.service.API.TranscriptionService;
+import feign.FeignException;
+import feign.Request;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,9 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,13 +44,20 @@ class TranscriptionServiceTest {
     }
 
     @Test
-    void transcribe_WithException_ShouldReturnErrorResponse() {
+    void transcribe_WithException_ShouldHandleError() {
         when(config.getAudioModel()).thenReturn(TEST_AUDIO_MODEL);
         MultipartFile mockFile = new MockMultipartFile("test.mp3", "test".getBytes());
-        when(openAIClient.createTranscription(any())).thenThrow(new RuntimeException("Error"));
 
-        WhisperTranscriptionResponse result = transcriptionService.transcribe(new TranscriptionRequest(mockFile));
+        when(openAIClient.createTranscription(any()))
+                .thenThrow(new FeignException.InternalServerError(
+                        "Service error",
+                        mock(Request.class),
+                        "Error details".getBytes(),
+                        null
+                ));
 
-        assertTrue(result.text().contains("Error"));
+        assertThrows(TranscriptionException.class, () ->
+                transcriptionService.transcribe(new TranscriptionRequest(mockFile))
+        );
     }
 }

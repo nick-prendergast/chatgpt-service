@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -89,4 +90,19 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(TranscriptionException.class)
+    public ResponseEntity<String> handleTranscriptionException(TranscriptionException ex) {
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(ChatException.class)
+    public ResponseEntity<String> handleChatException(ChatException ex) {
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
 }

@@ -1,6 +1,7 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.GUI;
 
 import com.github.kolomolo.service.openaiclient.model.request.Message;
+import com.github.kolomolo.service.openaiclient.service.GUI.ChatSessionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;
 

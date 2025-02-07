@@ -1,4 +1,4 @@
-package com.github.kolomolo.service.openaiclient.service;
+package com.github.kolomolo.service.openaiclient.service.GUI;
 
 import com.github.kolomolo.service.openaiclient.common.ChatConstants;
 import com.github.kolomolo.service.openaiclient.model.request.Message;

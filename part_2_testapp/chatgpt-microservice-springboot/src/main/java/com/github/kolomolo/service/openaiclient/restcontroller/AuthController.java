@@ -1,7 +1,7 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
-import com.github.kolomolo.service.openaiclient.service.AuthenticationService;
+import com.github.kolomolo.service.openaiclient.service.API.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,23 +1,28 @@
 package com.github.kolomolo.service.openaiclient.service;
 
+import com.github.kolomolo.service.openaiclient.exception.ChatException;
+import com.github.kolomolo.service.openaiclient.model.request.ChatGPTRequest;
 import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
 import com.github.kolomolo.service.openaiclient.model.request.Message;
 import com.github.kolomolo.service.openaiclient.model.response.ChatGPTResponse;
 import com.github.kolomolo.service.openaiclient.model.response.Choice;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClient;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClientConfig;
+import feign.FeignException;
+import feign.Request;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChatServiceTest {
@@ -45,14 +50,22 @@ class ChatServiceTest {
     }
 
     @Test
-    void chat_WithException_ShouldReturnErrorMessage() {
+    void chat_WithException_ShouldHandleError() {
         when(config.getModel()).thenReturn(TEST_MODEL);
-        when(openAIClient.chat(any())).thenThrow(new RuntimeException("Error"));
 
-        String result = chatService.chat(new ChatRequest(TEST_QUESTION));
+        when(openAIClient.chat(any()))
+                .thenThrow(new FeignException.InternalServerError(
+                        "Service error",
+                        mock(Request.class),
+                        "Error details".getBytes(),
+                        null
+                ));
 
-        assertEquals("Error", result);
+        assertThrows(ChatException.class, () ->
+                chatService.chat(new ChatRequest(TEST_QUESTION))
+        );
     }
+
 
     private ChatGPTResponse createMockChatGPTResponse() {
         return new ChatGPTResponse(
