@@ -5,7 +5,11 @@ import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
 import com.github.kolomolo.service.openaiclient.model.response.AuthenticationResponse;
-import com.github.kolomolo.service.openaiclient.security.*;
+import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationHandler;
+import com.github.kolomolo.service.openaiclient.security.JwtTokenExtractor;
+import com.github.kolomolo.service.openaiclient.security.JwtService;
+import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
+import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
 import com.github.kolomolo.service.openaiclient.service.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +23,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @WebMvcTest(controllers = AuthController.class)
 @Import({
         JwtTokenExtractor.class,

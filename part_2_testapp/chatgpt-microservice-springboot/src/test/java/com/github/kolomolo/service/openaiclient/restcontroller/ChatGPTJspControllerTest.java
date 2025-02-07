@@ -1,6 +1,10 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
-import com.github.kolomolo.service.openaiclient.security.*;
+import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationHandler;
+import com.github.kolomolo.service.openaiclient.security.JwtTokenExtractor;
+import com.github.kolomolo.service.openaiclient.security.JwtService;
+import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
+import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
 import com.github.kolomolo.service.openaiclient.service.ChatMessageService;
 import com.github.kolomolo.service.openaiclient.service.ChatSessionService;
 import org.junit.jupiter.api.Test;
@@ -17,7 +21,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest(
         controllers = ChatGPTJspController.class,
