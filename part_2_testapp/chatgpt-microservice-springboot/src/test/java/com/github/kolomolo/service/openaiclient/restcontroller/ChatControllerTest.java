@@ -1,31 +1,33 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 import com.github.kolomolo.service.openaiclient.exception.GlobalExceptionHandler;
 import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
-import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
-import com.github.kolomolo.service.openaiclient.security.JwtService;
-import com.github.kolomolo.service.openaiclient.security.SecurityConfig;
+import com.github.kolomolo.service.openaiclient.security.*;
 import com.github.kolomolo.service.openaiclient.service.ChatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.*;
-import org.springframework.boot.test.mock.mockito.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WebMvcTest(ChatController.class)
-@Import({SecurityConfig.class, JwtAuthenticationFilter.class, JwtService.class, GlobalExceptionHandler.class})
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class, JwtService.class, GlobalExceptionHandler.class, JwtTokenExtractor.class,
+        JwtAuthenticationHandler.class,
+        SecurityPathMatcher.class})
 @TestPropertySource(properties = {
         "jwt.secret-key=test-secret-key",
         "jwt.username=testuser",

@@ -45,3 +45,5 @@ jwt:
   secret-key: ${JWT_SECRET_KEY:your-secure-256-bit-secret-key-here}
   username: ${JWT_USERNAME:devuser}
   password: ${JWT_PASSWORD:devpass123}
+  expiration-ms: 86400000  # 24 hours in milliseconds
+  issuer: kolomolo-service}

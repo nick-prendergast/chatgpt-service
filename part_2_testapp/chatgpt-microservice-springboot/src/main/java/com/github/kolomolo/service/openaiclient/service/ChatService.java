@@ -6,10 +6,10 @@ import com.github.kolomolo.service.openaiclient.model.request.Message;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClient;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClientConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
+
 @Service
 @Slf4j
 public class ChatService {

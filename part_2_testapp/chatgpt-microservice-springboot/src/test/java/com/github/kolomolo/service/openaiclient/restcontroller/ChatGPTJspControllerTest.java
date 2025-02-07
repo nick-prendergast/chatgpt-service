@@ -1,12 +1,13 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
-import com.github.kolomolo.service.openaiclient.security.JwtService;
+import com.github.kolomolo.service.openaiclient.security.*;
 import com.github.kolomolo.service.openaiclient.service.ChatMessageService;
 import com.github.kolomolo.service.openaiclient.service.ChatSessionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,9 +22,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(
         controllers = ChatGPTJspController.class,
         excludeAutoConfiguration = {
-                org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
+                org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
         }
 )
+@Import({
+        JwtTokenExtractor.class,
+        JwtAuthenticationHandler.class,
+        SecurityPathMatcher.class,
+        JwtAuthenticationFilter.class
+})
 class ChatGPTJspControllerTest {
 
     @Autowired

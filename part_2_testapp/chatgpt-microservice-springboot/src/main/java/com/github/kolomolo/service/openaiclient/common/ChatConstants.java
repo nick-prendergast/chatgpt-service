@@ -1,7 +1,8 @@
 package com.github.kolomolo.service.openaiclient.common;
 
 public final class ChatConstants {
-    private ChatConstants() {}
+    private ChatConstants() {
+    }
 
     public static final class Roles {
         public static final String USER = "user";

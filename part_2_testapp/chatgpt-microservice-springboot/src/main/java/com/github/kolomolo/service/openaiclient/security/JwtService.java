@@ -1,47 +1,68 @@
 package com.github.kolomolo.service.openaiclient.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class JwtService {
-
+    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
     @Value("${jwt.secret-key}")
     private String secretKey;
+    @Value("${jwt.expiration-ms}")
+    private long expirationMs;
+    @Value("${jwt.issuer}")
+    private String issuer;
 
     public String generateToken(String username) {
-        return Jwts.builder()
+        log.debug("Generating JWT token for user: {}", username);
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationMs);
+
+        String token = Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .setIssuer(issuer)
+                .signWith(getSignInKey(), SIGNATURE_ALGORITHM)
                 .compact();
+
+        log.debug("Generated JWT token for user: {}, expires: {}", username, expiryDate);
+        return token;
     }
 
     public String validateTokenAndGetUsername(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            log.debug("Validating JWT token");
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .requireIssuer(issuer)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        // Check if token is expired
-        if (claims.getExpiration().before(new Date())) {
-            throw new RuntimeException("Token is expired");
+            String username = claims.getSubject();
+            log.debug("Successfully validated JWT token for user: {}", username);
+            return username;
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT token is expired: {}", e.getMessage());
+            throw e;
+        } catch (JwtException e) {
+            log.warn("JWT token validation failed: {}", e.getMessage());
+            throw e;
         }
-
-        return claims.getSubject();
     }
+
 
     private Key getSignInKey() {
-        byte[] keyBytes = secretKey.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
     }
+
 }

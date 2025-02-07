@@ -2,8 +2,7 @@ package com.github.kolomolo.service.openaiclient.service;
 
 import com.github.kolomolo.service.openaiclient.common.ChatConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 @Slf4j
 public class ErrorMessageExtractor {
 

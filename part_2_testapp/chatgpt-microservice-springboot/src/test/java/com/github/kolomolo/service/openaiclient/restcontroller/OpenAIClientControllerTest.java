@@ -7,7 +7,7 @@
 //import com.github.kolomolo.service.openaiclient.model.response.WhisperTranscriptionResponse;
 //import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
 //import com.github.kolomolo.service.openaiclient.security.JwtService;
-//import com.github.kolomolo.service.openaiclient.security.SecurityConfig;
+//import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 //import com.github.kolomolo.service.openaiclient.service.OpenAIClientService;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

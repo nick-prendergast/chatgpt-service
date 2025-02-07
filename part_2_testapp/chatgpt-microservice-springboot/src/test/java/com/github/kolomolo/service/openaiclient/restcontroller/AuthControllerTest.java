@@ -1,13 +1,11 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.kolomolo.service.openaiclient.exception.GlobalExceptionHandler;
+import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
 import com.github.kolomolo.service.openaiclient.model.response.AuthenticationResponse;
-import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
-import com.github.kolomolo.service.openaiclient.security.JwtService;
-import com.github.kolomolo.service.openaiclient.security.SecurityConfig;
+import com.github.kolomolo.service.openaiclient.security.*;
 import com.github.kolomolo.service.openaiclient.service.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = AuthController.class)
-@Import({SecurityConfig.class, JwtAuthenticationFilter.class, JwtService.class, GlobalExceptionHandler.class})
+@Import({
+        JwtTokenExtractor.class,
+        JwtAuthenticationHandler.class,
+        SecurityPathMatcher.class,
+        JwtService.class,
+        JwtAuthenticationFilter.class,
+        SecurityConfig.class
+})
 class AuthControllerTest {
 
     @Autowired
