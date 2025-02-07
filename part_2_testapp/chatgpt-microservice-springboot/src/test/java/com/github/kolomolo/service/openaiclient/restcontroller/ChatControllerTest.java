@@ -1,6 +1,7 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.kolomolo.service.openaiclient.TestConstants;
 import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 import com.github.kolomolo.service.openaiclient.exception.GlobalExceptionHandler;
 import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
@@ -18,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -32,14 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({SecurityConfig.class, JwtAuthenticationFilter.class, JwtService.class, GlobalExceptionHandler.class, JwtTokenExtractor.class,
         JwtAuthenticationHandler.class,
         SecurityPathMatcher.class})
-@TestPropertySource(properties = {
-        "jwt.secret-key=test-secret-key",
-        "jwt.username=testuser",
-        "jwt.password=testpass"
-})
 class ChatControllerTest {
-    private static final String MOCK_TOKEN = "Bearer mock.jwt.token";
-    private static final String VALID_TOKEN = "mock.jwt.token";
+    private static final String MOCK_TOKEN = TestConstants.HttpHeaders.BEARER_PREFIX + TestConstants.JwtTokens.VALID;
+    private static final String VALID_TOKEN = TestConstants.JwtTokens.VALID;
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,21 +48,21 @@ class ChatControllerTest {
     @BeforeEach
     void setUp() {
         when(jwtService.validateTokenAndGetUsername(VALID_TOKEN))
-                .thenReturn("testuser");
+                .thenReturn(TestConstants.TestData.USERNAME);
     }
 
     @Test
-    @WithMockUser(username = "testuser")
+    @WithMockUser(username = TestConstants.TestData.USERNAME)
     void chat_WithValidRequest_ShouldReturnResponse() throws Exception {
-        ChatRequest request = new ChatRequest("What is OpenAI?");
-        String expectedResponse = "OpenAI is an artificial intelligence research company.";
+        ChatRequest request = new ChatRequest(TestConstants.TestData.MESSAGE);
+        String expectedResponse = TestConstants.TestData.CHAT_RESPONSE;
 
         when(chatService.chat(any(ChatRequest.class)))
                 .thenReturn(expectedResponse);
 
-        mockMvc.perform(post("/api/v1/chat")
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", MOCK_TOKEN)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION, MOCK_TOKEN)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResponse));
@@ -75,9 +70,9 @@ class ChatControllerTest {
 
     @Test
     void chat_WithMissingAuthorizationHeader_ShouldReturnUnauthorized() throws Exception {
-        ChatRequest request = new ChatRequest("What is OpenAI?");
+        ChatRequest request = new ChatRequest(TestConstants.TestData.MESSAGE);
 
-        mockMvc.perform(post("/api/v1/chat")
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -85,39 +80,39 @@ class ChatControllerTest {
 
     @Test
     void chat_WithInvalidToken_ShouldReturnUnauthorized() throws Exception {
-        ChatRequest request = new ChatRequest("What is OpenAI?");
+        ChatRequest request = new ChatRequest(TestConstants.TestData.MESSAGE);
 
         when(jwtService.validateTokenAndGetUsername(VALID_TOKEN))
                 .thenThrow(new RuntimeException("Invalid token"));
 
-        mockMvc.perform(post("/api/v1/chat")
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", MOCK_TOKEN)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION, MOCK_TOKEN)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @WithMockUser(username = "testuser")
+    @WithMockUser(username = TestConstants.TestData.USERNAME)
     void chat_WithEmptyQuestion_ShouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/api/v1/chat")
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", MOCK_TOKEN)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION, MOCK_TOKEN)
                         .content(objectMapper.writeValueAsString(new ChatRequest(""))))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Question cannot be empty")));
     }
 
     @Test
-    @WithMockUser(username = "testuser")
+    @WithMockUser(username = TestConstants.TestData.USERNAME)
     void chat_WhenServiceThrowsException_ShouldReturnInternalServerError() throws Exception {
         when(chatService.chat(any(ChatRequest.class)))
                 .thenThrow(new RuntimeException("Internal server error"));
 
-        mockMvc.perform(post("/api/v1/chat")
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", MOCK_TOKEN)
-                        .content(objectMapper.writeValueAsString(new ChatRequest("test"))))
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION, MOCK_TOKEN)
+                        .content(objectMapper.writeValueAsString(new ChatRequest(TestConstants.TestData.MESSAGE))))
                 .andExpect(status().isInternalServerError());
     }
 }

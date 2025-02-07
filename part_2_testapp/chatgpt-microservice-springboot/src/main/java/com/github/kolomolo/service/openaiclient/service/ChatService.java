@@ -12,11 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.FeignException;
-import lombok.extern.slf4j.Slf4j;
-
 @Service
 @Slf4j
 public class ChatService {

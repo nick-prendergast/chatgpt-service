@@ -1,5 +1,6 @@
 package com.github.kolomolo.service.openaiclient.service.API;
 
+import com.github.kolomolo.service.openaiclient.TestConstants;
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
 import com.github.kolomolo.service.openaiclient.model.response.AuthenticationResponse;
@@ -12,18 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
-
-    private static final String VALID_USERNAME = "testuser";
-    private static final String VALID_PASSWORD = "testpass";
-    private static final String TEST_TOKEN = "test.jwt.token";
     @Mock
     private JwtService jwtService;
     @InjectMocks
@@ -31,72 +25,71 @@ class AuthenticationServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(authenticationService, "validUsername", VALID_USERNAME);
-        ReflectionTestUtils.setField(authenticationService, "validPassword", VALID_PASSWORD);
+        ReflectionTestUtils.setField(authenticationService, "validUsername",
+                TestConstants.TestData.USERNAME);
+        ReflectionTestUtils.setField(authenticationService, "validPassword",
+                TestConstants.TestData.PASSWORD);
     }
 
     @Test
     void authenticate_WithValidCredentials_ShouldReturnToken() {
-        // Given
-        AuthenticationRequest request = new AuthenticationRequest(VALID_USERNAME, VALID_PASSWORD);
+        AuthenticationRequest request = new AuthenticationRequest(
+                TestConstants.TestData.USERNAME,
+                TestConstants.TestData.PASSWORD
+        );
 
-        // Stub only when actually used in this specific test
-        when(jwtService.generateToken(VALID_USERNAME)).thenReturn(TEST_TOKEN);
+        when(jwtService.generateToken(TestConstants.TestData.USERNAME))
+                .thenReturn(TestConstants.JwtTokens.VALID);
 
-        // When
         AuthenticationResponse response = authenticationService.authenticate(request);
 
-        // Then
         assertNotNull(response);
-        assertEquals(TEST_TOKEN, response.token());
+        assertEquals(TestConstants.JwtTokens.VALID, response.token());
     }
 
     @Test
     void authenticate_WithInvalidUsername_ShouldThrowUnauthorizedException() {
-        // Given
-        AuthenticationRequest request = new AuthenticationRequest("wronguser", VALID_PASSWORD);
+        AuthenticationRequest request = new AuthenticationRequest("wronguser",
+                TestConstants.TestData.PASSWORD);
 
-        // When & Then
         assertThrows(UnauthorizedException.class,
                 () -> authenticationService.authenticate(request));
     }
 
     @Test
     void authenticate_WithInvalidPassword_ShouldThrowUnauthorizedException() {
-        // Given
-        AuthenticationRequest request = new AuthenticationRequest(VALID_USERNAME, "wrongpass");
+        AuthenticationRequest request = new AuthenticationRequest(
+                TestConstants.TestData.USERNAME, "wrongpass");
 
-        // When & Then
         assertThrows(UnauthorizedException.class,
                 () -> authenticationService.authenticate(request));
     }
 
     @Test
     void authenticate_WithEmptyUsername_ShouldThrowUnauthorizedException() {
-        // When & Then
         assertThrows(UnauthorizedException.class,
-                () -> authenticationService.authenticate(new AuthenticationRequest("", VALID_PASSWORD)));
+                () -> authenticationService.authenticate(
+                        new AuthenticationRequest("", TestConstants.TestData.PASSWORD)));
     }
 
     @Test
     void authenticate_WithEmptyPassword_ShouldThrowUnauthorizedException() {
-        // When & Then
         assertThrows(UnauthorizedException.class,
-                () -> authenticationService.authenticate(new AuthenticationRequest(VALID_USERNAME, "")));
+                () -> authenticationService.authenticate(
+                        new AuthenticationRequest(TestConstants.TestData.USERNAME, "")));
     }
 
     @Test
     void authenticate_WithNullUsername_ShouldThrowUnauthorizedException() {
-        // When & Then
         assertThrows(UnauthorizedException.class,
-                () -> authenticationService.authenticate(new AuthenticationRequest(null, VALID_PASSWORD)));
+                () -> authenticationService.authenticate(
+                        new AuthenticationRequest(null, TestConstants.TestData.PASSWORD)));
     }
 
     @Test
     void authenticate_WithNullPassword_ShouldThrowUnauthorizedException() {
-        // When & Then
         assertThrows(UnauthorizedException.class,
-                () -> authenticationService.authenticate(new AuthenticationRequest(VALID_USERNAME, null)));
+                () -> authenticationService.authenticate(
+                        new AuthenticationRequest(TestConstants.TestData.USERNAME, null)));
     }
-
 }

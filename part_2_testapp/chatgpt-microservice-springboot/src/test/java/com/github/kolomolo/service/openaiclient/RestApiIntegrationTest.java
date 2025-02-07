@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,7 +59,7 @@ class RestApiIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        jwtToken = VALID_JWT;
+        jwtToken = TestConstants.JwtTokens.VALID;
 
         // Setup auth service mock
         AuthenticationResponse authResponse = new AuthenticationResponse(jwtToken);
@@ -69,17 +68,17 @@ class RestApiIntegrationTest {
 
         // Setup JWT service mock
         when(jwtService.validateTokenAndGetUsername(eq(jwtToken)))
-                .thenReturn(TEST_USERNAME);
-        when(jwtService.validateTokenAndGetUsername(eq(EXPIRED_JWT)))
+                .thenReturn(TestConstants.TestData.USERNAME);
+        when(jwtService.validateTokenAndGetUsername(eq(TestConstants.JwtTokens.EXPIRED)))
                 .thenThrow(new ExpiredJwtException(null, null, "Token has expired"));
 
         // Setup chat service mock
         when(chatService.chat(any(ChatRequest.class)))
-                .thenReturn(TEST_CHAT_RESPONSE);
+                .thenReturn(TestConstants.TestData.CHAT_RESPONSE);
 
         // Setup transcription service mock
         when(transcriptionService.transcribe(any()))
-                .thenReturn(new WhisperTranscriptionResponse(TRANSCRIBED_TEXT));
+                .thenReturn(new WhisperTranscriptionResponse(TestConstants.TestData.TRANSCRIBED_TEXT));
 
         // Setup security path matcher
         when(securityPathMatcher.shouldFilter(anyString())).thenReturn(true);
@@ -90,42 +89,28 @@ class RestApiIntegrationTest {
         SecurityContextHolder.clearContext();
     }
 
-    @Test
-    void authentication_WithValidCredentials_ShouldReturnToken() throws Exception {
-        AuthenticationRequest request = new AuthenticationRequest(TEST_USERNAME, TEST_PASSWORD);
-
-        MvcResult result = mockMvc.perform(post(LOGIN_ENDPOINT)
-                        .contentType(CONTENT_TYPE_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        AuthenticationResponse response = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                AuthenticationResponse.class
-        );
-        assertEquals(VALID_JWT, response.token());
-    }
 
     @Test
     void chat_WithValidToken_ShouldReturnResponse() throws Exception {
-        ChatRequest chatRequest = new ChatRequest(TEST_MESSAGE);
+        ChatRequest chatRequest = new ChatRequest(TestConstants.TestData.MESSAGE);
 
-        mockMvc.perform(post(CHAT_ENDPOINT)
-                        .header(AUTH_HEADER, BEARER_PREFIX + jwtToken)
-                        .contentType(CONTENT_TYPE_JSON)
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION,
+                                TestConstants.HttpHeaders.BEARER_PREFIX + jwtToken)
+                        .contentType(TestConstants.ContentTypes.JSON)
                         .content(objectMapper.writeValueAsString(chatRequest)))
                 .andExpect(status().isOk())
-                .andExpect(content().string(TEST_CHAT_RESPONSE));
+                .andExpect(content().string(TestConstants.TestData.CHAT_RESPONSE));
     }
 
     @Test
     void chat_WithInvalidRequest_ShouldReturn400() throws Exception {
         ChatRequest invalidRequest = new ChatRequest("");
 
-        mockMvc.perform(post(CHAT_ENDPOINT)
-                        .header(AUTH_HEADER, BEARER_PREFIX + jwtToken)
-                        .contentType(CONTENT_TYPE_JSON)
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION,
+                                TestConstants.HttpHeaders.BEARER_PREFIX + jwtToken)
+                        .contentType(TestConstants.ContentTypes.JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -135,13 +120,14 @@ class RestApiIntegrationTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file",
                 "test.mp3",
-                CONTENT_TYPE_AUDIO,
+                TestConstants.ContentTypes.AUDIO_MPEG,
                 "test audio content".getBytes()
         );
 
-        MvcResult result = mockMvc.perform(multipart(TRANSCRIPTION_ENDPOINT)
+        MvcResult result = mockMvc.perform(multipart(TestConstants.Endpoints.TRANSCRIPTION)
                         .file(file)
-                        .header(AUTH_HEADER, BEARER_PREFIX + jwtToken))
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION,
+                                TestConstants.HttpHeaders.BEARER_PREFIX + jwtToken))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -149,53 +135,38 @@ class RestApiIntegrationTest {
                 result.getResponse().getContentAsString(),
                 WhisperTranscriptionResponse.class
         );
-        assertEquals(TRANSCRIBED_TEXT, response.text());
+        assertEquals(TestConstants.TestData.TRANSCRIBED_TEXT, response.text());
     }
 
     @Test
     void chat_WithoutToken_ShouldReturn401() throws Exception {
-        ChatRequest chatRequest = new ChatRequest(TEST_MESSAGE);
+        ChatRequest chatRequest = new ChatRequest(TestConstants.TestData.MESSAGE);
 
-        mockMvc.perform(post(CHAT_ENDPOINT)
-                        .contentType(CONTENT_TYPE_JSON)
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
+                        .contentType(TestConstants.ContentTypes.JSON)
                         .content(objectMapper.writeValueAsString(chatRequest)))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void chat_WithExpiredToken_ShouldReturn401() throws Exception {
-        ChatRequest chatRequest = new ChatRequest(TEST_MESSAGE);
+        ChatRequest chatRequest = new ChatRequest(TestConstants.TestData.MESSAGE);
 
-        mockMvc.perform(post(CHAT_ENDPOINT)
-                        .header(AUTH_HEADER, BEARER_PREFIX + EXPIRED_JWT)
-                        .contentType(CONTENT_TYPE_JSON)
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION,
+                                TestConstants.HttpHeaders.BEARER_PREFIX + TestConstants.JwtTokens.EXPIRED)
+                        .contentType(TestConstants.ContentTypes.JSON)
                         .content(objectMapper.writeValueAsString(chatRequest)))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void chat_WithInvalidContentType_ShouldReturn415() throws Exception {
-        mockMvc.perform(post(CHAT_ENDPOINT)
-                        .header(AUTH_HEADER, BEARER_PREFIX + jwtToken)
-                        .contentType(CONTENT_TYPE_TEXT)
-                        .content(TEST_MESSAGE))
+        mockMvc.perform(post(TestConstants.Endpoints.CHAT)
+                        .header(TestConstants.HttpHeaders.AUTHORIZATION,
+                                TestConstants.HttpHeaders.BEARER_PREFIX + jwtToken)
+                        .contentType(TestConstants.ContentTypes.TEXT)
+                        .content(TestConstants.TestData.MESSAGE))
                 .andExpect(status().isUnsupportedMediaType());
     }
-
-    private static final String AUTH_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
-    private static final String VALID_JWT = "test-jwt-token";
-    private static final String EXPIRED_JWT = "expired.jwt.token";
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
-    private static final String CHAT_ENDPOINT = "/api/v1/chat";
-    private static final String TRANSCRIPTION_ENDPOINT = "/api/v1/transcription";
-    private static final String CONTENT_TYPE_JSON = "application/json";
-    private static final String CONTENT_TYPE_TEXT = "text/plain";
-    private static final String CONTENT_TYPE_AUDIO = "audio/mpeg";
-    private static final String TEST_USERNAME = "testuser";
-    private static final String TEST_PASSWORD = "testpass";
-    private static final String TEST_MESSAGE = "Test message";
-    private static final String TEST_CHAT_RESPONSE = "Test chat response";
-    private static final String TRANSCRIBED_TEXT = "transcribed text";
-    
 }

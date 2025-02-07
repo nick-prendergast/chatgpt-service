@@ -1,11 +1,11 @@
 package com.github.kolomolo.service.openaiclient.service.API;
 
+import com.github.kolomolo.service.openaiclient.TestConstants;
 import com.github.kolomolo.service.openaiclient.exception.TranscriptionException;
 import com.github.kolomolo.service.openaiclient.model.request.TranscriptionRequest;
 import com.github.kolomolo.service.openaiclient.model.response.WhisperTranscriptionResponse;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClient;
 import com.github.kolomolo.service.openaiclient.openaiclient.OpenAIClientConfig;
-import com.github.kolomolo.service.openaiclient.service.API.TranscriptionService;
 import feign.FeignException;
 import feign.Request;
 import org.junit.jupiter.api.Test;
@@ -36,11 +36,12 @@ class TranscriptionServiceTest {
     void transcribe_WithSuccessfulTranscription_ShouldReturnResponse() {
         when(config.getAudioModel()).thenReturn(TEST_AUDIO_MODEL);
         MultipartFile mockFile = new MockMultipartFile("test.mp3", "test".getBytes());
-        when(openAIClient.createTranscription(any())).thenReturn(new WhisperTranscriptionResponse("Transcribed text"));
+        when(openAIClient.createTranscription(any()))
+                .thenReturn(new WhisperTranscriptionResponse(TestConstants.TestData.TRANSCRIBED_TEXT));
 
         WhisperTranscriptionResponse result = transcriptionService.transcribe(new TranscriptionRequest(mockFile));
 
-        assertEquals("Transcribed text", result.text());
+        assertEquals(TestConstants.TestData.TRANSCRIBED_TEXT, result.text());
     }
 
     @Test

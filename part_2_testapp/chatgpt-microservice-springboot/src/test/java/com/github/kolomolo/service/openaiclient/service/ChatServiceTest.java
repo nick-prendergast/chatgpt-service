@@ -1,7 +1,6 @@
 package com.github.kolomolo.service.openaiclient.service;
 
 import com.github.kolomolo.service.openaiclient.exception.ChatException;
-import com.github.kolomolo.service.openaiclient.model.request.ChatGPTRequest;
 import com.github.kolomolo.service.openaiclient.model.request.ChatRequest;
 import com.github.kolomolo.service.openaiclient.model.request.Message;
 import com.github.kolomolo.service.openaiclient.model.response.ChatGPTResponse;
@@ -16,12 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

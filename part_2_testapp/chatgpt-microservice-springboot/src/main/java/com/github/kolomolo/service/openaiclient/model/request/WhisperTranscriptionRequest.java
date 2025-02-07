@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class WhisperTranscriptionRequest {
     public String model;
-    public  MultipartFile file;
+    public MultipartFile file;
 }

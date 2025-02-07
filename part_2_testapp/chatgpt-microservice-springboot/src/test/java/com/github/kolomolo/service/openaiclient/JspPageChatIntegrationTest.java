@@ -31,7 +31,7 @@ class JspPageChatIntegrationTest {
 
     @Test
     void fullChatFlow() throws Exception {
-        when(chatService.chat(any())).thenReturn("Test response from ChatGPT");
+        when(chatService.chat(any())).thenReturn(TestConstants.TestData.CHAT_RESPONSE);
 
         // Initial GET request to start session
         MvcResult initialResult = mockMvc.perform(get("/"))
@@ -44,7 +44,7 @@ class JspPageChatIntegrationTest {
         // POST request with message
         MvcResult postResult = mockMvc.perform(post("/chatgpt")
                         .session(session)
-                        .param("prompt", "test message"))
+                        .param("prompt", TestConstants.TestData.MESSAGE))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/chatgpt/results"))
                 .andReturn();

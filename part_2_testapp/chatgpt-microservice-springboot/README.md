@@ -1,72 +1,130 @@
 # ChatGPT Web Application
 
-A Spring Boot service that provides both a web interface and REST API for interacting with OpenAI's GPT models. This service offers:
+A Spring Boot microservice integrating with OpenAI's ChatGPT and Whisper for chat and transcription functionalities. The project includes a web interface, REST API, and JWT authentication.
 
-Chat functionality through GPT-3.5-turbo
-Audio transcription using Whisper
-Simple web UI for direct interactions
-REST API for programmatic access
-JWT-based authentication for API endpoints
+---
 
 ## Prerequisites
 
 ### OpenAI API Key
+
 - **Required**: Obtain from [OpenAI Platform](https://platform.openai.com/account/api-keys)
-- Set as environment variable: `OPENAI_API_KEY`
+- Set as an environment variable:
 
 ```bash
 export OPENAI_API_KEY=your_openai_api_key_here
 ```
 
+---
+
 ## Running the Application
 
 ### Setup
-1. Clone the repository
-2. Set OpenAI API Key
-3. Run with Maven:
+
+1. Clone the repository:
    ```bash
+   git clone https://github.com/your-repo/chatgpt-microservice-springboot.git
+   cd chatgpt-microservice-springboot
+   ```
+2. Set OpenAI API Key as described above.
+3. Build and run with Maven:
+   ```bash
+   mvn clean install
    mvn spring-boot:run
    ```
+
+---
 
 ## Access Methods
 
 ### 1. Web Interface
+
 - **URL**: `http://localhost:8500`
-- Public access
-- Direct chat with GPT-3.5-turbo
+- JSP page for direct interaction with ChatGPT.
 
-### 2. Postman API Access
-- **Base URL**: `http://localhost:8500`
+---
 
-## Endpoints
+## Postman API Access
 
-### Authentication
-- **POST** `/api/v1/auth/login`
-- Default Credentials:
-    - Username: `devuser`
-    - Password: `devpass123`
 
-### Chat API
-- **POST** `/api/v1/chat`
-- Requires JWT token
-- Request Body:
+
+### 2. Authentication Workflow
+
+#### Obtain JWT Token
+
+Send a **POST** request to:
+```
+/api/v1/auth/login
+```
+
+**Request Body (JSON):**
+```json
+{
+  "username": "devuser",
+  "password": "devpass123"
+}
+```
+
+**Response:** JWT token.
+
+#### Set Authorization Header
+
+- Type: **Bearer Token**
+- Token: **JWT received from login response**
+- Apply to subsequent requests.
+
+### 3. Example API Requests
+
+#### Chat Endpoint
+
+- **URL**: `http://localhost:8500/api/v1/chat`
+- **Method**: POST
+- **Headers:**
+    - `Content-Type: application/json`
+    - `Authorization: Bearer {your_jwt_token}`
+- **Body (JSON):**
   ```json
   {
-    "question": "Your message here"
+    "question": "Explain quantum computing"
   }
   ```
 
-### Transcription
-- **POST** `/api/v1/transcription`
-- Multipart form data
-- Requires JWT token
+#### Transcription Endpoint
+
+- **URL**: `http://localhost:8500/api/v1/transcription`
+- **Method**: POST
+- **Headers:**
+    - `Authorization: Bearer {your_jwt_token}`
+- **Body:** form-data
+    - **Key**: `file`
+    - **Value**: Select audio file (mp3/wav)
+
+---
+
+## Security: JWT Authentication
+
+- Simple authentication with JWT.
+- Secure API endpoints require a valid token.
+
+---
 
 ## Configuration
 
 ### Environment Variables
-- `OPENAI_API_KEY`: OpenAI API key (REQUIRED)
+
+| Variable         | Description             | Required |
+|-----------------|-------------------------|----------|
+| `OPENAI_API_KEY` | OpenAI API key | ✅ Yes |
+
+---
 
 ## System Details
-- **Port**: 8500
-- **OpenAI Model**: GPT-3.5-turbo
-- **JWT Token Expiration**: 24 hours
+
+- **Port**: `8500`
+- **Java Version**: `21`
+- **OpenAI Model**: `GPT-3.5-turbo`
+- **JWT Token Expiration**: `24 hours`
+- **JSP Page**: Available for prompt input
+
+---
+

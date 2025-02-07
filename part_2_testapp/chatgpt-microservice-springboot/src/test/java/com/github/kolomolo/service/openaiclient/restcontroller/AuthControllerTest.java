@@ -1,6 +1,7 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.kolomolo.service.openaiclient.TestConstants;
 import com.github.kolomolo.service.openaiclient.config.SecurityConfig;
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WebMvcTest(controllers = AuthController.class)
 @Import({
         JwtTokenExtractor.class,
@@ -43,21 +45,21 @@ class AuthControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
 
-    @MockBean
-    private JwtService jwtService;
-
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void login_WithValidCredentials_ShouldReturnToken() throws Exception {
-        AuthenticationRequest request = new AuthenticationRequest("testUser", "testPassword");
+        AuthenticationRequest request = new AuthenticationRequest(
+                TestConstants.TestData.USERNAME,
+                TestConstants.TestData.PASSWORD
+        );
         AuthenticationResponse response = new AuthenticationResponse("mockToken");
 
         when(authenticationService.authenticate(any(AuthenticationRequest.class)))
                 .thenReturn(response);
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -66,9 +68,9 @@ class AuthControllerTest {
 
     @Test
     void login_WithMissingUsername_ShouldReturnBadRequest() throws Exception {
-        AuthenticationRequest request = new AuthenticationRequest("", "testPassword");
+        AuthenticationRequest request = new AuthenticationRequest("", TestConstants.TestData.PASSWORD);
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -79,7 +81,7 @@ class AuthControllerTest {
     void login_WithMissingPassword_ShouldReturnBadRequest() throws Exception {
         AuthenticationRequest request = new AuthenticationRequest("testUser", "");
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -90,7 +92,7 @@ class AuthControllerTest {
     void login_WithInvalidJson_ShouldReturnBadRequest() throws Exception {
         String invalidJson = "{\"username\": \"testUser\", \"password\":}";
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
                 .andExpect(status().isBadRequest())
@@ -101,7 +103,7 @@ class AuthControllerTest {
     void login_WithUnsupportedMediaType_ShouldReturnUnsupportedMediaType() throws Exception {
         AuthenticationRequest request = new AuthenticationRequest("testUser", "testPassword");
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.TEXT_PLAIN)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnsupportedMediaType())
@@ -112,7 +114,7 @@ class AuthControllerTest {
     void login_WithUnknownField_ShouldReturnBadRequest() throws Exception {
         String jsonWithUnknownField = "{\"username\":\"testUser\",\"password\":\"testPassword\",\"unknown\":\"value\"}";
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWithUnknownField))
                 .andExpect(status().isBadRequest())
@@ -127,7 +129,7 @@ class AuthControllerTest {
         when(authenticationService.authenticate(any(AuthenticationRequest.class)))
                 .thenThrow(new UnauthorizedException("Invalid credentials"));
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
@@ -141,7 +143,7 @@ class AuthControllerTest {
         when(authenticationService.authenticate(any(AuthenticationRequest.class)))
                 .thenThrow(new RuntimeException("Internal server error"));
 
-        mockMvc.perform(post("/api/v1/auth/login")
+        mockMvc.perform(post(TestConstants.Endpoints.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
