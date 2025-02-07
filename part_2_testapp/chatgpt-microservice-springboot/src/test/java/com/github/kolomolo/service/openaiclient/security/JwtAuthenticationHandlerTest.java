@@ -1,5 +1,7 @@
 package com.github.kolomolo.service.openaiclient.security;
 
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationHandler;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

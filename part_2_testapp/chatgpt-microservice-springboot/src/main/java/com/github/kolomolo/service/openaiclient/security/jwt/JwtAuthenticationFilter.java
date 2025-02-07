@@ -1,5 +1,6 @@
-package com.github.kolomolo.service.openaiclient.security;
+package com.github.kolomolo.service.openaiclient.security.jwt;
 
+import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final SecurityPathMatcher pathMatcher;
 
     @Override
-    protected void doFilterInternal(
+    public void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain

@@ -1,10 +1,10 @@
 package com.github.kolomolo.service.openaiclient.restcontroller;
 
-import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationHandler;
-import com.github.kolomolo.service.openaiclient.security.JwtTokenExtractor;
-import com.github.kolomolo.service.openaiclient.security.JwtService;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationHandler;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtTokenExtractor;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import com.github.kolomolo.service.openaiclient.security.SecurityPathMatcher;
-import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationFilter;
 import com.github.kolomolo.service.openaiclient.service.ChatMessageService;
 import com.github.kolomolo.service.openaiclient.service.ChatSessionService;
 import org.junit.jupiter.api.Test;

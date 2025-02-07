@@ -3,7 +3,7 @@ package com.github.kolomolo.service.openaiclient.service;
 import com.github.kolomolo.service.openaiclient.exception.UnauthorizedException;
 import com.github.kolomolo.service.openaiclient.model.request.AuthenticationRequest;
 import com.github.kolomolo.service.openaiclient.model.response.AuthenticationResponse;
-import com.github.kolomolo.service.openaiclient.security.JwtService;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

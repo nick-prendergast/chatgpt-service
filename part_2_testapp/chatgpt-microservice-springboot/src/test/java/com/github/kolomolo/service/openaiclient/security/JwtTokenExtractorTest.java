@@ -1,5 +1,6 @@
 package com.github.kolomolo.service.openaiclient.security;
 
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtTokenExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

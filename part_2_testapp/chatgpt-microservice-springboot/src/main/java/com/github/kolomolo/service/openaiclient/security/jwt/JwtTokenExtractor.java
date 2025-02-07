@@ -1,4 +1,4 @@
-package com.github.kolomolo.service.openaiclient.security;
+package com.github.kolomolo.service.openaiclient.security.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

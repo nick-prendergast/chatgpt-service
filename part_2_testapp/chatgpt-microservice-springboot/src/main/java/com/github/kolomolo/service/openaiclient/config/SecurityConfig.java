@@ -1,6 +1,6 @@
 package com.github.kolomolo.service.openaiclient.config;
 
-import com.github.kolomolo.service.openaiclient.security.JwtAuthenticationFilter;
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

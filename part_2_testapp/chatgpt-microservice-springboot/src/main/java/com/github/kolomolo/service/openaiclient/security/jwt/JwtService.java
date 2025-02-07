@@ -1,4 +1,4 @@
-package com.github.kolomolo.service.openaiclient.security;
+package com.github.kolomolo.service.openaiclient.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

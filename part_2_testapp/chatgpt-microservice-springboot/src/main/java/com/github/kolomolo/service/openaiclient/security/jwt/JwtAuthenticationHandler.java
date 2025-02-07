@@ -1,4 +1,4 @@
-package com.github.kolomolo.service.openaiclient.security;
+package com.github.kolomolo.service.openaiclient.security.jwt;
 
 import com.github.kolomolo.service.openaiclient.exception.JwtAuthenticationException;
 import io.jsonwebtoken.ExpiredJwtException;

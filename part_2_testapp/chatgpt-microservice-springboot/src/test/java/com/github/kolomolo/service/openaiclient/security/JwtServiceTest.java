@@ -1,5 +1,6 @@
 package com.github.kolomolo.service.openaiclient.security;
 
+import com.github.kolomolo.service.openaiclient.security.jwt.JwtService;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
